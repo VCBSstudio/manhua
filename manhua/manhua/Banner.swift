@@ -16,6 +16,77 @@ extension Color {
     }
 }
 
+//struct CustomPageIndicator: View {
+//    let numberOfPages: Int // 总页数
+//    let currentIndex: Int // 当前索引
+//
+//    var body: some View {
+//        HStack(spacing: 8) {
+//            ForEach(0..<numberOfPages, id: \.self) { index in
+//                Circle()
+//                    .fill(index == currentIndex ? Color.blue : Color.gray)
+//                    .frame(width: 10, height: 10)
+//                    .animation(.easeInOut, value: currentIndex) // 平滑过渡动画
+//            }
+//        }
+//    }
+//}
+
+//struct CustomPageIndicator: View {
+//    let numberOfPages: Int
+//    let currentIndex: Int
+//
+//    var body: some View {
+//        ProgressView(value: Double(currentIndex + 1), total: Double(numberOfPages))
+//            .progressViewStyle(LinearProgressViewStyle(tint: Color.blue)) // 自定义进度条样式
+//            .frame(height: 4)
+//            .padding(.horizontal)
+//    }
+//}
+
+// 可能还有长图
+//struct CustomPageIndicator: View {
+//    let numberOfPages: Int
+//    let currentIndex: Int
+//
+//    var body: some View {
+//        HStack(spacing: 8) {
+//            ForEach(0..<numberOfPages, id: \.self) { index in
+//                GeometryReader { geometry in
+//                    Circle()
+//                        .fill(index == currentIndex ? Color.blue : Color.gray)
+//                        .frame(width: index == currentIndex ? 12 : 8, height: index == currentIndex ? 12 : 8)
+//                        .scaleEffect(index == currentIndex ? 1.2 : 1.0) // 动态缩放效果
+//                        .animation(.spring(), value: currentIndex)
+//                }
+//                .frame(width: 12, height: 12) // 限制 GeometryReader 的大小
+//            }
+//        }
+//    }
+//}
+
+struct CustomPageIndicator: View {
+    let numberOfPages: Int
+    let currentIndex: Int
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(0..<numberOfPages, id: \.self) { index in
+                if index == currentIndex {
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Color.blue) // 选中的索引颜色
+                        .frame(width: 20, height: 8) // 长条的大小
+                        .animation(.easeInOut, value: currentIndex)
+                } else {
+                    Circle()
+                        .fill(Color.gray) // 未选中的索引颜色
+                        .frame(width: 8, height: 8) // 圆点的大小
+                }
+            }
+        }
+    }
+}
+
 struct CarouselView: View {
     
     @State var currentIndex = 0 // 当前索引
@@ -117,6 +188,9 @@ struct CarouselView: View {
             )
         }
         .frame(height: 250) // 轮播图的高度
+        // 自定义分页指示器
+        CustomPageIndicator(numberOfPages: self.originColors.count, currentIndex: currentIndex % self.originColors.count)
+                       .padding(.top, 10)
     }
     
     // 启动自动滚动
